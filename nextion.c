@@ -78,6 +78,7 @@ void nx_send(const char* str, ...) {
       uart_putchar(formatted[i], stdout);
     }
     free(formatted);
+    formatted = NULL;
   }
   va_end(args);
 
@@ -99,6 +100,7 @@ size_t nx_send_read(uint8_t *buff, const char *str, ...) {
       uart_putchar(formatted[i], stdout);
     }
     free(formatted);
+    formatted = NULL;
   }
   va_end(args);
   nx_send_term();
@@ -161,6 +163,7 @@ int* nx_check(uint8_t *buff, size_t buff_size) {
   if (buff_size == 0 || !nx_has_termination(buff, buff_size)) {
     if (allocated == 1)
       free(buff);
+      buff = NULL;
     return;
   }
 
@@ -193,6 +196,7 @@ int* nx_check(uint8_t *buff, size_t buff_size) {
   }
   if (allocated == 1)
     free(buff);
+    buff = NULL;
   if (return_buff != NULL)
     return return_buff;
 }
@@ -207,9 +211,11 @@ uint8_t nx_current_page(void) {
   if (buff[0] == NX_CURRENT_PAGE_NUMBER && nx_has_termination(buff, buff_size)) {
     uint8_t page = buff[1];
     free(buff);
+    buff = NULL;
     return page;
   } else {
     free(buff);
+    buff = NULL;
     return 0x00;
   }
 }
@@ -273,4 +279,5 @@ void nx_init(void) {
   }
 
   free(buff);
+  buff = NULL;
 }
